@@ -18,6 +18,9 @@ public class HexGrid : MonoBehaviour
     Canvas gridCanvas;
     HexMesh hexMesh;
 
+
+    public Color defaultColor = Color.green;
+
     private void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
@@ -45,6 +48,31 @@ public class HexGrid : MonoBehaviour
         newHex.transform.SetParent(transform, false);
         newHex.transform.localPosition = position;
         newHex.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        newHex.color = defaultColor;
+
+        if(x > 0)
+        {
+            newHex.SetNeighbour(HexDirection.W, HexList[i - 1]);
+        }
+        if(z > 0)
+        {
+            if((z & 1) == 0)
+            {
+                newHex.SetNeighbour(HexDirection.SE, HexList[i - width]);
+                if(x > 0)
+                {
+                    newHex.SetNeighbour(HexDirection.SW, HexList[i - width - 1]);
+                }
+            }
+            else
+            {
+                newHex.SetNeighbour(HexDirection.SW, HexList[i - width]);
+                if(x < width - 1)
+                {
+                    newHex.SetNeighbour(HexDirection.SE, HexList[i - width + 1]);
+                }
+            }
+        }
 
         Text newLabel = Instantiate<Text>(hexLabelPrefab);
         newLabel.rectTransform.SetParent(gridCanvas.transform, false);
@@ -58,30 +86,14 @@ public class HexGrid : MonoBehaviour
         hexMesh.Triangulate(HexList);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetMouseButton(0))
-        {
-            HandleInput();
-        }
-    }
-
-    void HandleInput()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if(Physics.Raycast(inputRay, out hit))
-        {
-            TouchCell(hit.point);
-        }
-    }
-
-    void TouchCell (Vector3 position)
+    public void ColorCell (Vector3 position, Color color)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+        Hex hex = HexList[index];
+        hex.color = color;
+        hexMesh.Triangulate(HexList);
         Debug.Log("touched at" + coordinates.ToString());
     }
 }

@@ -6,20 +6,19 @@ public class Hex : MonoBehaviour
 {
     public HexCoordinates coordinates;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public Color color;
 
+    [SerializeField]
+    public Hex[] neighbours;
+
+    public Hex GetNeighbour (HexDirection direction)
+    {
+        return neighbours[(int)direction];
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetNeighbour(HexDirection direction, Hex hex)
     {
-        
-    }
-
-    void SetLayout()
-    {
-
+        neighbours[(int)direction] = hex;
+        hex.neighbours[(int)direction.Opposite()] = this;
     }
 }

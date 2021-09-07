@@ -46,3 +46,11 @@ MonoBehaviour:
   coordinates:
     x: 0
     z: 0
+  color: {r: 1, g: 1, b: 1, a: 0}
+  neighbours:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
