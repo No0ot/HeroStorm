@@ -78,6 +78,7 @@ public class HexGrid : MonoBehaviour
         newLabel.rectTransform.SetParent(gridCanvas.transform, false);
         newLabel.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         newLabel.text = newHex.coordinates.ToStringOnSeparateLines();
+        newHex.uiRect = newLabel.rectTransform;
     }
 
     // Start is called before the first frame update
@@ -86,14 +87,17 @@ public class HexGrid : MonoBehaviour
         hexMesh.Triangulate(HexList);
     }
 
-    public void ColorCell (Vector3 position, Color color)
+    public Hex GetHex (Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        Hex hex = HexList[index];
-        hex.color = color;
-        hexMesh.Triangulate(HexList);
+        return HexList[index];
         Debug.Log("touched at" + coordinates.ToString());
+    }
+
+    public void Refresh()
+    {
+        hexMesh.Triangulate(HexList);
     }
 }
