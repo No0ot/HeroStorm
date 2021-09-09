@@ -7,21 +7,18 @@ public class HexMesh : MonoBehaviour
 {
     Mesh hexMesh;
     [SerializeField]
-    List<Vector3> vertices;
-    List<int> triangles;
+    static List<Vector3> vertices = new List<Vector3>();
+    static List<int> triangles = new List<int>();
+    static List<Color> colors = new List<Color>();
 
     MeshCollider collider;
     [SerializeField]
-    List<Color> colors;
 
     private void Awake()
     {
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
         collider = gameObject.AddComponent<MeshCollider>();
         hexMesh.name = "Hex Mesh";
-        vertices = new List<Vector3>();
-        triangles = new List<int>();
-        colors = new List<Color>();
     }
 
    public void Triangulate(Hex[] hex_list)
@@ -60,16 +57,10 @@ public class HexMesh : MonoBehaviour
         Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
 
         AddTriangle(center, v1, v2);
-        AddTriangleColor(hex.color);
+        AddTriangleColor(hex.Color);
 
         if(direction <= HexDirection.SE)
             TriangulateConnection(direction, hex, v1, v2);
-
-        //AddTriangle(v1, center + HexMetrics.GetFirstCorner(direction), v3);
-        //AddTriangleColor(hex.color, (hex.color + prevNeighbour.color + neighbour.color) / 3f, bridgeColor);
-        //
-        //AddTriangle(v2, v4, center + HexMetrics.GetSecondCorner(direction));
-        //AddTriangleColor(hex.color, bridgeColor, (hex.color + neighbour.color + nextNeighbour.color) / 3f);
     }
 
     void TriangulateConnection(HexDirection direction, Hex hex, Vector3 v1, Vector3 v2)
@@ -84,7 +75,7 @@ public class HexMesh : MonoBehaviour
         v3.y = v4.y = neighbour.Elevation * HexMetrics.elevationStep;
 
         AddQuad(v1, v2, v3, v4);
-        AddQuadColor(hex.color, neighbour.color);
+        AddQuadColor(hex.Color, neighbour.Color);
 
         Hex nextNeighbour = hex.GetNeighbour(direction.Next());
         if(direction <= HexDirection.E && nextNeighbour != null)
@@ -92,7 +83,7 @@ public class HexMesh : MonoBehaviour
             Vector3 v5 = v2 + HexMetrics.GetBridge(direction.Next());
             v5.y = nextNeighbour.Elevation * HexMetrics.elevationStep;
             AddTriangle(v2, v4, v5);
-            AddTriangleColor(hex.color, neighbour.color, nextNeighbour.color);
+            AddTriangleColor(hex.Color, neighbour.Color, nextNeighbour.Color);
         }
     }
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)

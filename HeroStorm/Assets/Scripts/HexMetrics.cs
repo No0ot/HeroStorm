@@ -6,11 +6,13 @@ public static class HexMetrics
 
     public const float innerRadius = outerRadius * 0.866025404f;
 
-    public const float solidFactor = 0.75f;
+    public const float solidFactor = 0.9f;
 
     public const float blendFactor = 1f - solidFactor;
 
     public const float elevationStep = 2f;
+
+    public const int chunkSizeX = 5, chunkSizeZ = 5;
 
     static Vector3[] corners =
     {
