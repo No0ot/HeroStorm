@@ -22,13 +22,21 @@ public class HexGrid : MonoBehaviour
 
     public Color defaultColor = Color.green;
 
+    public Texture2D noiseSource;
+
     private void Awake()
     {
+        HexMetrics.noiseSource = noiseSource;
         hexCountX = chunkCountX * HexMetrics.chunkSizeX;
         hexCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
 
         CreateChunks();
         CreateHexs();
+    }
+
+    private void OnEnable()
+    {
+        HexMetrics.noiseSource = noiseSource;
     }
 
     void CreateChunks()

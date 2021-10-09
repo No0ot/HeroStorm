@@ -5,9 +5,50 @@ using UnityEngine;
 public class Hex : MonoBehaviour
 {
     public HexCoordinates coordinates;
-
     public HexGridChunk chunk;
 
+    int waterLevel;
+
+    Color color;
+
+    [SerializeField]
+    public Hex[] neighbours;
+
+    public RectTransform uiRect;
+
+    int elevation = int.MinValue;
+
+    public float WaterSurfaceY
+    {
+        get
+        {
+            return (waterLevel + HexMetrics.waterElevationOffset) * (HexMetrics.elevationStep);
+        }
+    }
+    public bool isUnderwater
+    {
+        get
+        {
+            return waterLevel > elevation;
+        }
+    }
+
+    public int WaterLevel 
+    {
+        get
+        {
+            return waterLevel;
+        }
+        set
+        {
+            if (waterLevel == value)
+            {
+                return;
+            }
+            waterLevel = value;
+            Refresh();
+        }
+    }
     public Color Color
     {
         get
@@ -23,14 +64,6 @@ public class Hex : MonoBehaviour
         }
     }
 
-    Color color;
-
-    [SerializeField]
-    public Hex[] neighbours;
-
-    public RectTransform uiRect;
-
-    int elevation = int.MinValue;
     public int Elevation
     {
         get
